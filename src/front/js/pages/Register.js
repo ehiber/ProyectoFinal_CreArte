@@ -1,4 +1,3 @@
-// src/front/js/pages/Register.js
 import React, { useState } from "react";
 import { validateEmail, validatePassword, confirmPassword } from "../components/FormValidation"; // Cambiado aquí
 import InputField from "../components/InputField";
@@ -10,11 +9,15 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const validationErrors = {};
 
+        // Validación de los campos
         if (!validateEmail(email)) validationErrors.email = "Email no válido.";
         if (!validatePassword(password)) validationErrors.password = "La contraseña debe tener al menos 8 caracteres.";
         if (!confirmPassword(password, confirmPasswordValue)) validationErrors.confirmPassword = "Las contraseñas no coinciden.";
@@ -22,15 +25,31 @@ const Register = () => {
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
         } else {
-            const response = await fetch("/api/registro", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ nombre, email, contraseña: password })
-            });
-            if (response.ok) {
-                alert("Registro exitoso");
-            } else {
-                alert("Error en el registro");
+            setLoading(true); // Indicar que la solicitud está en curso
+            setSuccessMessage("");
+            setErrorMessage("");
+
+            try {
+                const response = await fetch(`${process.env.BACKEND_URL}api/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ nombre, email, contraseña: password })
+                });
+                if (response.ok) {
+                    setSuccessMessage("Registro exitoso");
+                    // Reiniciar los campos del formulario
+                    setNombre("");
+                    setEmail("");
+                    setPassword("");
+                    setConfirmPasswordValue("");
+                } else {
+                    const errorData = await response.json();
+                    setErrorMessage(errorData.mensaje || "Error en el registro");
+                }
+            } catch (error) {
+                setErrorMessage("Error en el registro: " + error.message);
+            } finally {
+                setLoading(false); // Finaliza la carga
             }
         }
     };
@@ -51,7 +70,12 @@ const Register = () => {
                 <InputField label="Confirmar Contraseña" type="password" value={confirmPasswordValue} onChange={(e) => setConfirmPasswordValue(e.target.value)} placeholder="Confirmar Contraseña" />
                 {errors.confirmPassword && <p className="error-text">{errors.confirmPassword}</p>}
 
-                <button type="submit" className="btn btn-primary">Registrarse</button>
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading ? "Registrando..." : "Registrarse"}
+                </button>
+
+                {successMessage && <p className="success-text">{successMessage}</p>}
+                {errorMessage && <p className="error-text">{errorMessage}</p>}
             </form>
         </div>
     );
