@@ -5,12 +5,18 @@ from flask import request, jsonify, Blueprint
 from api.models import db, User  # Asegúrate de que importas User, no Usuario
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
+import re
 
 api = Blueprint('api', __name__)
 bcrypt = Bcrypt()
 
 # Permitir solicitudes CORS a esta API
 CORS(api, supports_credentials=True)
+
+# Validación de correo electrónico
+def is_valid_email(email):
+    regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+    return re.match(regex, email) is not None
 
 # Ruta para restablecer la contraseña
 @api.route('/restablecer-contraseña', methods=['PUT'])
@@ -22,7 +28,7 @@ def update_password():
     if not email or not new_password:
         return jsonify({"msg": "Email y nueva contraseña son requeridos"}), 400
 
-    user = User.query.filter_by(email=email).first()  # Cambia Usuario por User
+    user = User.query.filter_by(email=email).first()
     if not user:
         return jsonify({"msg": "Usuario no encontrado"}), 404
 
@@ -53,9 +59,8 @@ def login():
     if not email or not password:
         return jsonify({"msg": "Email y contraseña son requeridos"}), 400
 
-    user = User.query.filter_by(email=email).first()  # Cambia Usuario por User
+    user = User.query.filter_by(email=email).first()
 
-    # Verificar si el usuario existe y si la contraseña es correcta
     if user and bcrypt.check_password_hash(user.contraseña, password):
         return jsonify({"message": "Inicio de sesión exitoso", "user": user.serialize()}), 200
     else:
@@ -66,21 +71,31 @@ def login():
 def registrar_usuario():
     data = request.get_json()
 
-    if not data.get('nombre_de_usuario') or not data.get('email') or not data.get('contraseña'):
-        return jsonify({"mensaje": "Todos los campos son requeridos"}), 400
+    # Validar los campos requeridos
+    required_fields = ['nombre_de_usuario', 'email', 'contraseña']
+    for field in required_fields:
+        if field not in data or not data[field]:
+            return jsonify({"mensaje": f"{field.replace('_', ' ').capitalize()} es requerido"}), 400
 
-    if User.query.filter_by(email=data['email']).first():  # Cambia Usuario por User
-        return jsonify({"mensaje": "El email ya está en uso"}), 409  # Conflicto
+    # Validar el formato del email
+    if not is_valid_email(data['email']):
+        return jsonify({"mensaje": "El email no tiene un formato válido"}), 400
 
+    # Verificar si el email ya está en uso
+    if User.query.filter_by(email=data['email']).first():
+        return jsonify({"mensaje": "El email ya está en uso"}), 409
+
+    # Encriptar la contraseña
     contraseña_encriptada = bcrypt.generate_password_hash(data["contraseña"]).decode('utf-8')
 
-    nuevo_usuario = User(  # Cambia Usuario por User
+    # Crear un nuevo usuario
+    nuevo_usuario = User(
         nombre_de_usuario=data['nombre_de_usuario'],
         email=data['email'],
         contraseña=contraseña_encriptada,
-        nombre=data['nombre'],
-        sexo=data['sexo'],
-        edad=data['edad']
+        nombre=data.get('nombre'),  # Usar .get() para evitar KeyError
+        sexo=data.get('sexo'),
+        edad=data.get('edad')
     )
 
     try:
