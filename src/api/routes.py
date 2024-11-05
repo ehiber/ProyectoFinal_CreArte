@@ -92,7 +92,7 @@ def registrar_usuario():
     nuevo_usuario = User(
         nombre_de_usuario=data['nombre_de_usuario'],
         email=data['email'],
-        contraseña=contraseña_encriptada,
+        password=contraseña_encriptada,
         nombre=data.get('nombre'),  # Usar .get() para evitar KeyError
         sexo=data.get('sexo'),
         edad=data.get('edad')

@@ -16,28 +16,32 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const validationErrors = {};
-
+    
         // Validación de los campos
         if (!validateEmail(email)) validationErrors.email = "Email no válido.";
         if (!validatePassword(password)) validationErrors.password = "La contraseña debe tener al menos 8 caracteres.";
         if (!confirmPassword(password, confirmPasswordValue)) validationErrors.confirmPassword = "Las contraseñas no coinciden.";
-
+    
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
         } else {
             setLoading(true); // Indicar que la solicitud está en curso
             setSuccessMessage("");
             setErrorMessage("");
-
+    
             try {
-                const response = await fetch(`${process.env.BACKEND_URL}api/login`, {
+                const response = await fetch(`${process.env.BACKEND_URL}api/registro`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ nombre, email, contraseña: password })
+                    body: JSON.stringify({
+                        nombre_de_usuario: nombre, 
+                        email,
+                        contraseña: password
+                    })
                 });
                 if (response.ok) {
                     setSuccessMessage("Registro exitoso");
-                    // Reiniciar los campos del formulario
+                    
                     setNombre("");
                     setEmail("");
                     setPassword("");
@@ -53,6 +57,7 @@ const Register = () => {
             }
         }
     };
+    
 
     return (
         <div className="register-form">
