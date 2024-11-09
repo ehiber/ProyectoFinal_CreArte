@@ -5,7 +5,7 @@ import { BackendURL } from "./components/backendURL";
 import { Home } from "./pages/home"; 
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
-import { Categories } from "./pages/Categories"; 
+import Categories from './pages/Categories';
 import ProductDetailPage from "./pages/ProductDetailPage";
 import { ShoppingCart } from "./pages/ShoppingCart";
 import Register from "./pages/Register";
