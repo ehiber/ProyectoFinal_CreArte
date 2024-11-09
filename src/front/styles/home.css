@@ -1,35 +1,108 @@
-/* scr/front/styles/home.css */
+/* home.css */
+
+/* Asegúrate de que el cuerpo de la página tenga suficiente espacio arriba */
 body {
-    background-color: #dfdac5;
+    background-color: #f4f0e0;
+    margin-top: 600px;  /* Aumenté el margen superior para más espacio */
+    padding-top: 0;  /* Evitar que haya espacio por padding */
 }
-.text-center {
+
+/* Carrusel */
+.carousel {
+    width: 100%;
+    height: 700px;
+    overflow: hidden;
+    margin: 10px 0 40px;
+}
+
+.carousel-inner img {
+    width: 100%;
+    height: 700px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Sección de bienvenida */
+.home-container .text-center {
+    margin-top: 100px;  /* Aumenté el margen superior */
+    margin-bottom: 20px;
+    padding: 20px;
+    color: #333;
+    font-size: 1.5rem;
     text-align: center;
 }
 
-.carousel {
-    display: flex; /* O usa flexbox o grid según prefieras */
-    overflow: auto; /* Esto permitirá un desplazamiento lateral si hay muchas imágenes */
+/* Ajuste de tamaño del título */
+.home-container .text-center h1 {
+    font-size: 3.5rem;  /* Título más grande */
+    font-weight: normal; /* Eliminar la negrita */
+    color: #2a2a2a;
+    letter-spacing: 2px;
 }
 
-.carousel-image {
-    margin: 0 10px; /* Espaciado entre imágenes */
-}
-
-.featured-products {
+/* Estilos de las tarjetas */
+.card {
     display: flex;
-    flex-wrap: wrap; /* Permite que los productos se distribuyan en varias filas */
-    justify-content: center; /* Centra los productos */
+    flex-direction: column;
+    height: 100%;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    margin: 15px;
+    transition: transform 0.2s ease-in-out;
 }
 
-.product-card {
-    border: 1px solid #ddd; /* Añade un borde */
-    border-radius: 5px; /* Esquinas redondeadas */
-    margin: 15px; /* Espaciado entre tarjetas */
-    padding: 10px; /* Espaciado interno */
-    width: 200px; /* Ancho fijo */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
-.product-card img {
-    width: 100%; /* Asegura que la imagen ocupe el 100% del ancho de la tarjeta */
-    height: auto; /* Mantiene la proporción de la imagen */
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.card-body {
+    padding: 1.2rem;
+    flex-grow: 1;
+}
+
+/* Estilos de texto */
+.card-title, .info-crearte h2, .info-crearte h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.card-text, .info-crearte p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Sección de información sobre CreArte */
+.info-crearte {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 60px; /* Aumenté el margen inferior para más espacio */
+}
+
+.info-crearte h2 {
+    margin-bottom: 20px; /* Espacio adicional después del h2 */
+}
+
+.info-crearte h3 {
+    margin-top: 30px; /* Espacio adicional antes del h3 */
+}
+
+/* Mejoras de pie de página */
+footer {
+    padding: 30px 0;
+    background-color: #f8f9fa;
+    text-align: center;
+    margin-top: 60px;
+    color: #333;
 }
