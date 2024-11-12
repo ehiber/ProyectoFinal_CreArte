@@ -53,20 +53,21 @@ def handle_hello():
 @api.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    email = data.get('email')
-    password = data.get('contraseña')
+    print(data)
+    email = data['email']
+    password = data['password']
 
     if not email or not password:
         return jsonify({"msg": "Email y contraseña son requeridos"}), 400
 
     user = User.query.filter_by(email=email).first()
 
-    if user and bcrypt.check_password_hash(user.contraseña, password):
+    if user and bcrypt.check_password_hash(user.password, password):
         return jsonify({"message": "Inicio de sesión exitoso", "user": user.serialize()}), 200
     else:
         return jsonify({"msg": "Credenciales inválidas"}), 401
 
-# Endpoint para registrar un usuario
+# Endpoint para + un usuario
 @api.route('/registro', methods=['POST'])
 def registrar_usuario():
     data = request.get_json()
