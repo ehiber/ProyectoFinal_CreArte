@@ -6,6 +6,46 @@ from api.models import db, User  # Asegúrate de que importas User, no Usuario
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 import re
+import os
+from flask import Blueprint
+import stripe
+from api import api  # Este es el nombre correcto si usas __init__.py para exportar api
+
+# Configuración de Stripe
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")  # Asegúrate de tener STRIPE_SECRET_KEY en tu .env
+
+@api.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+    try:
+        data = request.get_json()
+
+        # Datos necesarios para crear la sesión de pago
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': 'usd',
+                        'product_data': {
+                            'name': data['product_name'],
+                        },
+                        'unit_amount': int(data['price'] * 100),  # El monto en centavos
+                    },
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url="http://localhost:3000/success",  # URL de éxito
+            cancel_url="http://localhost:3000/cancel",    # URL de cancelación
+        )
+
+        # Retorna la URL de la sesión para redirigir al usuario
+        return jsonify({'id': checkout_session.id, 'url': checkout_session.url}), 200
+
+    except Exception as e:
+        print(f"Error al crear la sesión de pago: {e}")
+        return jsonify({"error": str(e)}), 500
+
 
 api = Blueprint('api', __name__)
 bcrypt = Bcrypt()
@@ -32,7 +72,7 @@ def update_password():
     if not user:
         return jsonify({"msg": "Usuario no encontrado"}), 404
 
-    user.contraseña = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
 
     try:
         db.session.commit()
@@ -53,19 +93,18 @@ def handle_hello():
 @api.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    print(data)
-    email = data['email']
-    password = data['password']
+    email = data.get('email')
+    password = data.get('password')
 
     if not email or not password:
         return jsonify({"msg": "Email y contraseña son requeridos"}), 400
 
     user = User.query.filter_by(email=email).first()
-
     if user and bcrypt.check_password_hash(user.password, password):
         return jsonify({"message": "Inicio de sesión exitoso", "user": user.serialize()}), 200
     else:
         return jsonify({"msg": "Credenciales inválidas"}), 401
+
 
 # Endpoint para + un usuario
 @api.route('/registro', methods=['POST'])
@@ -73,7 +112,7 @@ def registrar_usuario():
     data = request.get_json()
 
     # Validar los campos requeridos
-    required_fields = ['nombre_de_usuario', 'email', 'contraseña']
+    required_fields = ['nombre_de_usuario', 'email', 'password']
     for field in required_fields:
         if field not in data or not data[field]:
             return jsonify({"mensaje": f"{field.replace('_', ' ').capitalize()} es requerido"}), 400
