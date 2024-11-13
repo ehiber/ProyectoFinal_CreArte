@@ -25,7 +25,7 @@ const Login = () => {
             const response = await fetch(`${process.env.BACKEND_URL}api/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, contraseña: password }) // Asegúrate de que la clave sea "contraseña"
+                body: JSON.stringify({ email, password: password }) // Asegúrate de que la clave sea "contraseña"
             });
 
             if (response.ok) {
@@ -42,21 +42,21 @@ const Login = () => {
         <div className="login-form">
             <h2>Iniciar Sesión</h2>
             <form onSubmit={handleSubmit}>
-                <InputField 
-                    label="Email" 
-                    type="email" 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
-                    placeholder="Email" 
+                <InputField
+                    label="Email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
                 />
                 {errors.email && <p className="error-text">{errors.email}</p>}
 
-                <InputField 
-                    label="Contraseña" 
-                    type="password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    placeholder="Contraseña" 
+                <InputField
+                    label="Contraseña"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Contraseña"
                 />
                 {errors.password && <p className="error-text">{errors.password}</p>}
 
