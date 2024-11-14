@@ -1,36 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import "../../styles/shoppingCart.css";
+import { Context } from "../store/appContext";
 
 export const ShoppingCart = () => {
-  const [cartItems, setCartItems] = useState([]);
-
-  useEffect(() => {
-    // Cargar el carrito desde localStorage si existe
-    const storedCart = JSON.parse(localStorage.getItem("cart"));
-    if (storedCart) {
-      setCartItems(storedCart);
-    }
-  }, []);
+  const { store, actions } = useContext(Context); // Accede al store y las acciones desde Flux
+  const { cartItems } = store;
 
   const handleQuantityChange = (id, newQuantity) => {
     const updatedCart = cartItems.map(item =>
       item.id === id ? { ...item, quantity: newQuantity } : item
     );
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    actions.updateCart(updatedCart); // Actualiza el carrito en el store
   };
 
   const handleRemoveItem = (id) => {
     const updatedCart = cartItems.filter(item => item.id !== id);
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    actions.updateCart(updatedCart); // Actualiza el carrito en el store
   };
 
   const getTotalPrice = () => {
-    return cartItems.reduce(
-      (total, item) => total + parseFloat(item.precio.replace(" €", "")) * item.quantity,
-      0
-    );
+    return cartItems.reduce((total, item) => {
+      const price = parseFloat(item.precio?.replace(" €", "") || 0);
+      const quantity = item.quantity || 1; // Asume cantidad 1 si está indefinida
+      return total + price * quantity;
+    }, 0);
   };
 
   return (

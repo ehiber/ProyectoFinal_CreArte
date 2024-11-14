@@ -1,15 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Para redirigir
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/home.css";
+import { Context } from "../store/appContext";
 
 export const Home = () => {
-  const navigate = useNavigate(); // Hook de navegación
-
-  const [carrito, setCarrito] = useState(() => {
-    // Obtener el carrito desde localStorage al iniciar la página
-    const savedCart = JSON.parse(localStorage.getItem('cart'));
-    return savedCart || []; // Si no hay carrito guardado, inicializa como vacío
-  });
+  const navigate = useNavigate();
+  const { store, actions } = useContext(Context);
 
   const clases = [
     {
@@ -37,13 +33,11 @@ export const Home = () => {
 
   const handleInscripcion = (id) => {
     const claseSeleccionada = clases.find(clase => clase.id === id);
-    const claseYaEnCarrito = carrito.find(item => item.id === id);
+    const claseYaEnCarrito = store.cartItems.find(item => item.id === id);
 
     if (!claseYaEnCarrito) {
-      const nuevoCarrito = [...carrito, claseSeleccionada];
-      setCarrito(nuevoCarrito);
-      localStorage.setItem('cart', JSON.stringify(nuevoCarrito)); // Guardamos el carrito en localStorage
-      navigate("/carrito"); // Redirigimos al carrito
+      actions.addCourseToCart(claseSeleccionada);
+      navigate("/cart"); // Redirige al carrito
     } else {
       alert('Esta clase ya está en tu carrito.');
     }
@@ -83,6 +77,20 @@ export const Home = () => {
         </button>
       </div>
 
+      <section className="info-crearte my-5">
+        <div className="container text-center">
+          <h2>¿Por qué elegir CreArte?</h2>
+          <p>
+            En CreArte, nos dedicamos a impulsar la creatividad y la pasión por el arte de la cerámica y la alfarería. Ofrecemos clases prácticas y dinámicas que te permiten mejorar tus habilidades artísticas, todo mientras vives una experiencia única y enriquecedora.
+          </p>
+          <h3>¿Qué ofrecemos?</h3>
+          <p>
+            En CreArte, ofrecemos una amplia variedad de clases de cerámica, diseñadas para todos los niveles. Nuestros cursos
+            son impartidos por profesionales experimentados que comparten su conocimiento y pasión por el arte de la cerámica.
+          </p>
+        </div>
+      </section>
+
       <div className="container mt-5" id="clases">
         <h2 className="text-center nuestros-cursos-title">Nuestros Cursos</h2>
         <div className="row">
@@ -112,4 +120,3 @@ export const Home = () => {
 };
 
 export default Home;
-
