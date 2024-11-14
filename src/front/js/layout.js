@@ -7,13 +7,14 @@ import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import Categories from './pages/Categories';
 import ProductDetailPage from "./pages/ProductDetailPage";
-import { ShoppingCart } from "./pages/ShoppingCart";
+import ShoppingCart from "./pages/ShoppingCart";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./components/navbar";
 import Footer from "./components/footer"; // Importación por defecto
+import StripeTest from "./components/StripeTest";
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -34,6 +35,7 @@ const Layout = () => {
                         <Route element={<ShoppingCart />} path="/cart" />
                         <Route element={<Register />} path="/register" />
                         <Route element={<Login />} path="/login" />
+                        <Route path="/stripe-test" element={<StripeTest />} />
                         <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>
                     <Footer />

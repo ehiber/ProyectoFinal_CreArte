@@ -13,8 +13,8 @@ from flask_cors import CORS
 # Inicializar la aplicación Flask
 app = Flask(__name__)
 
-# Configuración de CORS (si el frontend está en un dominio diferente)
-CORS(app)
+# Configuración de CORS: Permitir solicitudes desde el frontend específico
+CORS(app, resources={r"/api/*": {"origins": "https://effective-barnacle-r4x94x5x77g3p9ww-3000.app.github.dev"}})
 
 # Registrar el Blueprint para las rutas API
 app.register_blueprint(api, url_prefix='/api')
@@ -44,7 +44,7 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 @app.route('/api/create-checkout-session', methods=['POST'])
 def create_checkout_session():
     try:
-        YOUR_DOMAIN = os.getenv("FRONTEND_URL", "http://localhost:3000")  # Reemplaza con tu dominio
+        YOUR_DOMAIN = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
         # Crear una sesión de pago en Stripe
         checkout_session = stripe.checkout.Session.create(
