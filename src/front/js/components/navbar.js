@@ -23,13 +23,14 @@ export const Navbar = () => {
             <li className="nav-item">
               <Link className="nav-link" to="/categories" style={{ fontSize: '0.9rem' }}>Clases mensuales</Link>
             </li>
-            {/* Agregar más enlaces si es necesario */}
           </ul>
 
           {/* Carrito con cantidad de artículos */}
           <Link to="/cart" className="btn btn-outline-dark d-flex align-items-center" style={{ padding: '0.25rem 0.5rem', fontSize: '0.8rem' }}>
             <i className="fas fa-shopping-cart" style={{ fontSize: '16px' }}></i>
-            <span className="badge bg-secondary ms-1" style={{ fontSize: '0.75rem' }}>{store.cartItems ? store.cartItems.length : 0}</span>
+            <span className="badge bg-secondary ms-1" style={{ fontSize: '0.75rem' }}>
+              {store.cartItems.length > 0 ? store.cartItems.length : 0}
+            </span>
           </Link>
 
           {/* Botones de registro e inicio de sesión */}
@@ -40,4 +41,9 @@ export const Navbar = () => {
     </nav>
   );
 };
+
+
+
+
+
 

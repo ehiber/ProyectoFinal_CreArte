@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/home.css";
+import { Context } from "../store/appContext";
 
 export const Home = () => {
-  // Información de las clases de cerámica
+  const navigate = useNavigate();
+  const { store, actions } = useContext(Context);
+
   const clases = [
     {
       id: 1,
@@ -27,20 +31,25 @@ export const Home = () => {
     },
   ];
 
-  // Función de inscripción
   const handleInscripcion = (id) => {
-    alert(`¡Te has inscrito en el curso con ID: ${id}!`);
+    const claseSeleccionada = clases.find(clase => clase.id === id);
+    const claseYaEnCarrito = store.cartItems.find(item => item.id === id);
+
+    if (!claseYaEnCarrito) {
+      actions.addCourseToCart(claseSeleccionada);
+      navigate("/cart"); // Redirige al carrito
+    } else {
+      alert('Esta clase ya está en tu carrito.');
+    }
   };
 
   return (
     <div className="home-container">
-      {/* Sección de bienvenida */}
       <div className="text-center mt-5">
         <h1 className="display-4">¡Despierta tu creatividad con CreArte!</h1>
         <p className="lead">Descubre tu potencial artístico en nuestras clases de cerámica y alfarería.</p>
       </div>
 
-      {/* Carrusel de imágenes */}
       <div id="carouselExample" className="carousel slide" data-bs-ride="carousel">
         <div className="carousel-inner">
           <div className="carousel-item active">
@@ -72,7 +81,7 @@ export const Home = () => {
         <div className="container text-center">
           <h2>¿Por qué elegir CreArte?</h2>
           <p>
-          En CreArte, nos dedicamos a impulsar la creatividad y la pasión por el arte de la cerámica y la alfarería. Ofrecemos clases prácticas y dinámicas que te permiten mejorar tus habilidades artísticas, todo mientras vives una experiencia única y enriquecedora.
+            En CreArte, nos dedicamos a impulsar la creatividad y la pasión por el arte de la cerámica y la alfarería. Ofrecemos clases prácticas y dinámicas que te permiten mejorar tus habilidades artísticas, todo mientras vives una experiencia única y enriquecedora.
           </p>
           <h3>¿Qué ofrecemos?</h3>
           <p>
@@ -82,9 +91,8 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Sección de clases */}
       <div className="container mt-5" id="clases">
-        <h2 className="text-center nuestros-cursos-title">Nuestros Cursos</h2> {/* Título con la clase de estilo */}
+        <h2 className="text-center nuestros-cursos-title">Nuestros Cursos</h2>
         <div className="row">
           {clases.map((clase) => (
             <div className="col-md-4 col-sm-6 col-12 mb-4" key={clase.id}>
@@ -106,26 +114,6 @@ export const Home = () => {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Sección de contacto */}
-      <div className="container mt-5" id="contacto">
-        <h2 className="text-center contactanos-title">Contáctanos</h2> {/* Título con la clase de estilo */}
-        <form>
-          <div className="mb-3">
-            <label htmlFor="nombre" className="form-label">Nombre</label>
-            <input type="text" className="form-control" id="nombre" placeholder="Tu nombre" />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">Correo Electrónico</label>
-            <input type="email" className="form-control" id="email" placeholder="Tu correo electrónico" />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="mensaje" className="form-label">Mensaje</label>
-            <textarea className="form-control" id="mensaje" rows="3" placeholder="Escribe tu mensaje"></textarea>
-          </div>
-          <button type="submit" className="btn btn-primary">Enviar</button>
-        </form>
       </div>
     </div>
   );
