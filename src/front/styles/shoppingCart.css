@@ -1,36 +1,129 @@
-.shopping-cart {
-    padding: 20px;
+/* Estilos generales para el carrito */
+.cart-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cart-container h1 {
+  font-size: 2.5em;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .cart-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.cart-item img {
-    width: 100px;
-    height: 100px;
-    margin-right: 10px;
+.cart-item h5 {
+  font-size: 1.2em;
+  color: #333;
 }
 
-.item-details {
-    flex-grow: 1;
+.cart-item p {
+  font-size: 1em;
+  color: #555;
 }
 
-.cart-total {
-    margin-top: 20px;
-    text-align: right;
+.cart-item div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.cart-total h3 {
-    font-size: 1.5rem;
+.cart-item label {
+  font-size: 1em;
 }
 
-.cart-total button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
+.cart-item input {
+  width: 60px;
+  padding: 5px;
+  font-size: 1em;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.cart-item button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.cart-item button:hover {
+  background-color: #d32f2f;
+}
+
+.total-price {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.total-price h3 {
+  color: #333;
+}
+
+.total-price button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.total-price button:hover {
+  background-color: #45a049;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cart-item div {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cart-item input {
+    width: 80px;
+  }
+
+  .total-price {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .total-price button {
+    width: 100%;
+    margin-top: 10px;
+  }
 }
