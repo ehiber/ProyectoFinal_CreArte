@@ -21,7 +21,7 @@ const Categories = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    setSubmissionMessage(`¡Inscripción recibida! Has elegido el horario: ${formData.horario}`);
+    setSubmissionMessage(`¡Inscripción recibida!`);
     
     setFormData({
       nombre: "",
